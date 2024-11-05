@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c1418683bf03a9c4aa3899c298853bfb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213049
+  packageName: Doctor's 2D pack
+  packageVersion: 1.0
+  assetPath: Assets/Doctor_Pack02/Animation/Doctor_01/Doctor_01.controller
+  uploadId: 479437

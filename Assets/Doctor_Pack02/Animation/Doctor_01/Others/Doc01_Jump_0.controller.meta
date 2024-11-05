@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 13fefad8b5ff22e46b0b0019be9aafed
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213049
+  packageName: Doctor's 2D pack
+  packageVersion: 1.0
+  assetPath: Assets/Doctor_Pack02/Animation/Doctor_01/Others/Doc01_Jump_0.controller
+  uploadId: 479437
