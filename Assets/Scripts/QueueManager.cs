@@ -47,6 +47,8 @@ public class QueueManager : MonoBehaviour
     // Moves the first patient in the queue to the treatment area
     public void StartTreatment()
     {
+
+        
         if (patientQueue.Count == 0) return;
 
         // Dequeue the first patient
