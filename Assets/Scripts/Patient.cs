@@ -7,6 +7,4 @@ public class Patient : MonoBehaviour
     public float waitingTime;
     public float turnaroundTime;
     public bool isServed = false;
-    
 }
-

@@ -1,85 +1,85 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro; // Ensure you have this if you're using TextMeshPro
 
 public class QueueManager : MonoBehaviour
 {
-    public GameObject patientPrefab; // The prefab for the Patient
-    public Transform waitingArea;    // The area where patients will queue
-    public Transform treatmentArea;  // The area where patients are treated
-    public float patientSpacing = 1.5f; // Spacing between patients in the queue
+    public Transform waitingArea;
+    public Transform treatmentArea;
+    public GameObject patientPrefab;
 
-    private Queue<GameObject> patientQueue = new Queue<GameObject>(); // Queue to store patients
+    // UI Text elements
+    public TextMeshProUGUI currentPatientWaitingTimeText;
+    public TextMeshProUGUI currentPatientTurnaroundTimeText;
+    public TextMeshProUGUI averageWaitingTimeText;
+    public TextMeshProUGUI averageTurnaroundTimeText;
+
+    private Queue<Patient> patientQueue = new Queue<Patient>();
+    private float totalWaitingTime = 0f;
+    private float totalTurnaroundTime = 0f;
+    private int patientsServed = 0;
 
     void Start()
     {
-        // Initial setup or spawning of patients can be done here
+        // Initialize the queue or add initial patients if needed
+    }
+
+    public void AddPatientToQueue(float arrivalTime, float serviceTime)
+    {
+        GameObject patientObj = Instantiate(patientPrefab, waitingArea.position, Quaternion.identity);
+        Patient patient = patientObj.GetComponent<Patient>();
+        patient.arrivalTime = arrivalTime;
+        patient.serviceTime = serviceTime;
+        patientQueue.Enqueue(patient);
     }
 
     void Update()
     {
-        // Update can be used to spawn patients periodically or based on user input
-        // Example: Press 'P' to add a patient
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            AddPatientToQueue();
-        }
+        ProcessFCFS(); // Call this method to manage the queue
+    }
 
-        // If there's a patient in the queue and the treatment area is empty, start treatment
-        if (patientQueue.Count > 0 && treatmentArea.childCount == 0)
+    private void ProcessFCFS()
+    {
+        if (patientQueue.Count > 0)
         {
-            StartTreatment();
+            Patient currentPatient = patientQueue.Peek();
+            if (!currentPatient.isServed)
+            {
+                // Move patient to treatment area
+                currentPatient.transform.position = treatmentArea.position;
+                currentPatient.isServed = true;
+
+                // Calculate waiting and turnaround times
+                currentPatient.waitingTime = Time.time - currentPatient.arrivalTime;
+                currentPatient.turnaroundTime = currentPatient.waitingTime + currentPatient.serviceTime;
+
+                // Update total times and served count
+                totalWaitingTime += currentPatient.waitingTime;
+                totalTurnaroundTime += currentPatient.turnaroundTime;
+                patientsServed++;
+
+                // Update UI
+                UpdateUI(currentPatient.waitingTime, currentPatient.turnaroundTime);
+                
+                // Dequeue the patient
+                patientQueue.Dequeue(); // Serve next patient
+            }
         }
     }
 
-    // Adds a new patient to the queue
-    public void AddPatientToQueue()
+    private void UpdateUI(float waitingTime, float turnaroundTime)
     {
-        GameObject newPatient = Instantiate(patientPrefab, waitingArea.position, Quaternion.identity);
-        
-        // Position the patient in the queue based on its position in the list
-        Vector3 newPosition = waitingArea.position + Vector3.right * (patientQueue.Count * patientSpacing);
-        newPatient.transform.position = newPosition;
+        currentPatientWaitingTimeText.text = "Current Patient Waiting Time: " + waitingTime.ToString("F2") + "s";
+        currentPatientTurnaroundTimeText.text = "Current Patient Turnaround Time: " + turnaroundTime.ToString("F2") + "s";
 
-        patientQueue.Enqueue(newPatient);
-    }
-
-    // Moves the first patient in the queue to the treatment area
-    public void StartTreatment()
-    {
-
-        
-        if (patientQueue.Count == 0) return;
-
-        // Dequeue the first patient
-        GameObject patientToTreat = patientQueue.Dequeue();
-
-        // Move patient to treatment area
-        patientToTreat.transform.position = treatmentArea.position;
-
-        // Parent the patient under the treatment area for organization
-        patientToTreat.transform.SetParent(treatmentArea);
-
-        // Optional: Access Patient script to start treatment
-        Patient patientScript = patientToTreat.GetComponent<Patient>();
-        if (patientScript != null)
+        // Calculate averages
+        if (patientsServed > 0)
         {
-            patientScript.StartTreatment();
-        }
+            float averageWaitingTime = totalWaitingTime / patientsServed;
+            float averageTurnaroundTime = totalTurnaroundTime / patientsServed;
 
-        // Re-position remaining patients in the queue
-        RepositionQueue();
-    }
-
-    // Repositions the queue so patients shift forward when one is moved to treatment
-    private void RepositionQueue()
-    {
-        int index = 0;
-        foreach (GameObject patient in patientQueue)
-        {
-            Vector3 newPosition = waitingArea.position + Vector3.right * (index * patientSpacing);
-            patient.transform.position = newPosition;
-            index++;
+            averageWaitingTimeText.text = "Average Waiting Time: " + averageWaitingTime.ToString("F2") + "s";
+            averageTurnaroundTimeText.text = "Average Turnaround Time: " + averageTurnaroundTime.ToString("F2") + "s";
         }
     }
 }
