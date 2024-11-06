@@ -5,17 +5,17 @@ public class MainMenu : MonoBehaviour
 {
     public void LoadCPUScheduling()
     {
-        SceneManager.LoadScene("CPUSchedulingScene");
+        SceneManager.LoadScene("CPUScheduling");
     }
 
     public void LoadProcessSynchronization()
     {
-        SceneManager.LoadScene("ProcessSynchronizationScene");
+        SceneManager.LoadScene("ProcessSynchronization");
     }
 
     public void LoadMemoryManagement()
     {
-        SceneManager.LoadScene("MemoryManagementScene");
+        SceneManager.LoadScene("MemoryManagement");
     }
 
     public void QuitGame()
