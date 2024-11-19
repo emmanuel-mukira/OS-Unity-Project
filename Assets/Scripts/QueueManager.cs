@@ -158,6 +158,7 @@ public class QueueManager : MonoBehaviour
         averageWaitingTimeText.text = "Avg Waiting Time: -";
         averageTurnaroundTimeText.text = "Avg Turnaround Time: -";
 
+
         currentPatient = null;
     }
 }
