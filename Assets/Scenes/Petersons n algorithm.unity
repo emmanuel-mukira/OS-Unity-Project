@@ -437,6 +437,85 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &230695378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 230695381}
+  - component: {fileID: 230695380}
+  - component: {fileID: 230695379}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &230695379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230695378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
+--- !u!114 &230695380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230695378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &230695381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230695378}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &276362254
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,6 +1547,7 @@ GameObject:
   - component: {fileID: 1566348343}
   - component: {fileID: 1566348345}
   - component: {fileID: 1566348346}
+  - component: {fileID: 1566348347}
   m_Layer: 0
   m_Name: Process 1
   m_TagString: Untagged
@@ -1557,17 +1637,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5ba823ec50da6645bbfe38ba4e6bb0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  processStartButton: {fileID: 1787702939}
-  processEndButton: {fileID: 38336819}
-  processes:
-  - {fileID: 1102815855}
-  - {fileID: 119461753}
-  - {fileID: 1566348341}
-  - {fileID: 2041274667}
-  - {fileID: 1562323346}
-  statusText: {fileID: 962175752}
-  criticalSectionSound: {fileID: 8300000, guid: ea21c97602b97be4a9b2d6c4aec24786, type: 3}
-  waitingSound: {fileID: 8300000, guid: 01b63ab8b6fcf3a45b135a0ab5726634, type: 3}
 --- !u!82 &1566348346
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1665,6 +1734,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1566348347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1566348341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3289d497e2e4d7e43b371e861127b942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  processStartButton: {fileID: 1787702939}
+  processEndButton: {fileID: 38336819}
+  processes:
+  - {fileID: 1102815855}
+  - {fileID: 119461753}
+  - {fileID: 1566348341}
+  - {fileID: 2041274667}
+  - {fileID: 1562323346}
+  statusText: {fileID: 962175752}
+  criticalSectionSound: {fileID: 8300000, guid: ea21c97602b97be4a9b2d6c4aec24786, type: 3}
+  waitingSound: {fileID: 8300000, guid: 01b63ab8b6fcf3a45b135a0ab5726634, type: 3}
 --- !u!1 &1787702935
 GameObject:
   m_ObjectHideFlags: 0
@@ -1994,3 +2086,4 @@ SceneRoots:
   - {fileID: 119461756}
   - {fileID: 1102815858}
   - {fileID: 1562323348}
+  - {fileID: 230695381}

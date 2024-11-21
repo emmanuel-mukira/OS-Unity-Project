@@ -6,19 +6,19 @@ using TMPro;
 
 public class QueueManager : MonoBehaviour
 {
-    public Transform doctorPosition; // The doctor's position
-    public Button fcfsButton; // Button for FCFS scheduling
-    public Button srtfButton; // Button for SRTF scheduling
-    public Button resetButton; // Button to reset the simulation
-    public GameObject[] patients; // Array of patient GameObjects
+    public Transform doctorPosition;
+    public Button fcfsButton;
+    public Button srtfButton;
+    public Button resetButton;
+    public GameObject[] patients;
 
-    // TextMeshPro elements for displaying results
     public TextMeshProUGUI waitingTimeText;
     public TextMeshProUGUI averageWaitingTimeText;
     public TextMeshProUGUI turnaroundTimeText;
     public TextMeshProUGUI averageTurnaroundTimeText;
+    public TextMeshProUGUI patientDoneText;
 
-    public float moveSpeed = 2f; // Speed at which patients move
+    public float moveSpeed = 2f;
     private List<Patient> patientQueue = new List<Patient>();
     private Patient currentPatient = null;
     private List<Patient> treatedPatients = new List<Patient>();
@@ -26,26 +26,28 @@ public class QueueManager : MonoBehaviour
     private float totalWaitingTime = 0f;
     private float totalTurnaroundTime = 0f;
 
-    private Dictionary<GameObject, Vector3> originalPositions = new Dictionary<GameObject, Vector3>(); // Store original positions
+    private Dictionary<GameObject, Vector3> originalPositions = new Dictionary<GameObject, Vector3>();
 
     private void Start()
     {
-        // Initialize patient queue and store their original positions
+        // Initialize patient queue and store original positions
         foreach (var patientObj in patients)
         {
             Patient patient = patientObj.GetComponent<Patient>();
             patientQueue.Add(patient);
-            originalPositions[patientObj] = patientObj.transform.position; // Save original positions
+            originalPositions[patientObj] = patientObj.transform.position;
 
-            // Ensure all patients start idle
             Animator animator = patientObj.GetComponent<Animator>();
-            animator.SetBool("isWalking", false);
+            animator.SetBool("isWalking", false); // Start idle
         }
 
         // Assign button click listeners
         fcfsButton.onClick.AddListener(() => StartSimulation("FCFS"));
         srtfButton.onClick.AddListener(() => StartSimulation("SRTF"));
         resetButton.onClick.AddListener(ResetSimulation);
+
+        // Ensure "Patient is done!" text is hidden initially
+        patientDoneText.text = "";
     }
 
     public void StartSimulation(string algorithm)
@@ -65,8 +67,7 @@ public class QueueManager : MonoBehaviour
         {
             if (patientQueue.Count > 0)
             {
-                // Sort patients by remaining burst time (Shortest Remaining Time First)
-                patientQueue.Sort((a, b) => a.remainingServiceTime.CompareTo(b.remainingServiceTime));
+                patientQueue.Sort((a, b) => a.remainingServiceTime.CompareTo(b.remainingServiceTime)); // SRTF
                 currentPatient = patientQueue[0];
                 patientQueue.RemoveAt(0);
                 StartCoroutine(ProcessPatient(currentPatient));
@@ -77,9 +78,8 @@ public class QueueManager : MonoBehaviour
     private IEnumerator ProcessPatient(Patient patient)
     {
         Animator animator = patient.GetComponent<Animator>();
-        animator.SetBool("isWalking", true); // Trigger walk animation
+        animator.SetBool("isWalking", true); // Start walking animation
 
-        // Move the patient towards the doctor position
         Vector3 targetPosition = new Vector3(doctorPosition.position.x, doctorPosition.position.y, patient.transform.position.z);
         while (Vector3.Distance(patient.transform.position, targetPosition) > 0.1f)
         {
@@ -89,23 +89,28 @@ public class QueueManager : MonoBehaviour
 
         animator.SetBool("isWalking", false); // Stop walking animation
 
-        // Simulate service time delay (doctor treating the patient)
+        // Simulate service time
         float startTime = Time.time;
         yield return new WaitForSeconds(patient.serviceTime);
 
         float completionTime = Time.time;
 
-        // Calculate waiting and turnaround times
+        // Update waiting and turnaround times
         patient.waitingTime = completionTime - patient.arrivalTime - patient.serviceTime;
         patient.turnaroundTime = completionTime - patient.arrivalTime;
 
-        // Update statistics
         treatedPatients.Add(patient);
         totalWaitingTime += patient.waitingTime;
         totalTurnaroundTime += patient.turnaroundTime;
         UpdateUI();
 
-        // Mark the current patient as treated
+        // Show "Patient is done!" text
+        patientDoneText.text = "Patient is done!";
+        yield return new WaitForSeconds(2f);
+
+        patientDoneText.text = "";
+        patient.gameObject.SetActive(false);
+
         currentPatient = null;
     }
 
@@ -131,24 +136,34 @@ public class QueueManager : MonoBehaviour
 
     public void ResetSimulation()
     {
-        // Reset patient positions and clear treated patients
+        // Reset patient positions, timings, and animations
         foreach (var patientObj in patients)
         {
-            patientObj.transform.position = originalPositions[patientObj];
             Patient patient = patientObj.GetComponent<Patient>();
-            patientQueue.Add(patient); // Add back to queue
-            patient.remainingServiceTime = patient.serviceTime; // Reset remaining service time
+            patientObj.transform.position = originalPositions[patientObj]; // Reset position
+            patient.remainingServiceTime = patient.serviceTime; // Reset service time
             patient.waitingTime = 0f;
             patient.turnaroundTime = 0f;
 
             Animator animator = patientObj.GetComponent<Animator>();
-            animator.SetBool("isWalking", false); // Ensure idle state
+            animator.SetBool("isWalking", false); // Reset animation
+
+            patient.gameObject.SetActive(true); // Reactivate patient
         }
 
+        // Clear queues and treated patients
+        patientQueue.Clear();
         treatedPatients.Clear();
-        patientQueue.Sort((a, b) => a.arrivalTime.CompareTo(b.arrivalTime)); // Restore FCFS order
 
-        // Reset statistics
+        // Refill patientQueue in FCFS order (by Arrival Time)
+        foreach (var patientObj in patients)
+        {
+            Patient patient = patientObj.GetComponent<Patient>();
+            patientQueue.Add(patient);
+        }
+        patientQueue.Sort((a, b) => a.arrivalTime.CompareTo(b.arrivalTime));
+
+        // Reset stats
         totalWaitingTime = 0f;
         totalTurnaroundTime = 0f;
 
@@ -158,7 +173,7 @@ public class QueueManager : MonoBehaviour
         averageWaitingTimeText.text = "Avg Waiting Time: -";
         averageTurnaroundTimeText.text = "Avg Turnaround Time: -";
 
-
+        patientDoneText.text = "";
         currentPatient = null;
     }
 }
